@@ -6,12 +6,13 @@ import com.github.jackson.oauth2client.oauth2.OAuth2AuthenticationSuccessHandler
 import com.github.jackson.oauth2client.user.UserService
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.jdbc.core.JdbcOperations
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.config.http.SessionCreationPolicy
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
-import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.security.oauth2.client.JdbcOAuth2AuthorizedClientService
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository
 import org.springframework.security.web.context.SecurityContextPersistenceFilter
 
 @Configuration
@@ -26,11 +27,15 @@ class WebSecurityConfigure : WebSecurityConfigurerAdapter() {
         JwtAuthenticationTokenFilter(jwt, configure.headerKey)
 
     @Bean
-    fun passwordEncoder(): PasswordEncoder = BCryptPasswordEncoder()
-
-    @Bean
     fun oauth2AuthenticationSuccessHandler(jwt: Jwt, userService: UserService): OAuth2AuthenticationSuccessHandler =
         OAuth2AuthenticationSuccessHandler(jwt, userService)
+
+    @Bean
+    fun jdbcOAuth2AuthorizedClientService(
+        jdbcOperations: JdbcOperations,
+        clientRegistrationRepository: ClientRegistrationRepository
+    ): JdbcOAuth2AuthorizedClientService =
+        JdbcOAuth2AuthorizedClientService(jdbcOperations, clientRegistrationRepository)
 
     override fun configure(http: HttpSecurity) {
         http
@@ -55,6 +60,7 @@ class WebSecurityConfigure : WebSecurityConfigurerAdapter() {
                 .and()
             .oauth2Login()
                 .successHandler(applicationContext.getBean(OAuth2AuthenticationSuccessHandler::class.java))
+                .authorizedClientService(applicationContext.getBean(JdbcOAuth2AuthorizedClientService::class.java))
                 .and()
             http.addFilterAfter(
                 applicationContext.getBean(JwtAuthenticationTokenFilter::class.java),
