@@ -2,6 +2,7 @@ package com.github.jackson.oauth2client.configures
 
 import com.github.jackson.oauth2client.jwt.Jwt
 import com.github.jackson.oauth2client.jwt.JwtAuthenticationTokenFilter
+import com.github.jackson.oauth2client.oauth2.HttpCookieOAuth2AuthorizationRequestRepository
 import com.github.jackson.oauth2client.oauth2.OAuth2AuthenticationSuccessHandler
 import com.github.jackson.oauth2client.user.UserService
 import org.springframework.context.annotation.Bean
@@ -15,6 +16,8 @@ import org.springframework.security.oauth2.client.JdbcOAuth2AuthorizedClientServ
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository
 import org.springframework.security.oauth2.client.web.AuthenticatedPrincipalOAuth2AuthorizedClientRepository
+import org.springframework.security.oauth2.client.web.AuthorizationRequestRepository
+import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest
 import org.springframework.security.web.context.SecurityContextPersistenceFilter
 
 @Configuration
@@ -27,6 +30,10 @@ class WebSecurityConfigure : WebSecurityConfigurerAdapter() {
     @Bean
     fun jwtAuthenticationTokenFilter(jwt: Jwt, configure: JwtConfigure): JwtAuthenticationTokenFilter =
         JwtAuthenticationTokenFilter(jwt, configure.headerKey)
+
+    @Bean
+    fun authorizationRequestRepository(): AuthorizationRequestRepository<OAuth2AuthorizationRequest> =
+        HttpCookieOAuth2AuthorizationRequestRepository()
 
     @Bean
     fun oauth2AuthenticationSuccessHandler(jwt: Jwt, userService: UserService): OAuth2AuthenticationSuccessHandler =
@@ -69,6 +76,9 @@ class WebSecurityConfigure : WebSecurityConfigurerAdapter() {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
             .oauth2Login()
+                .authorizationEndpoint()
+                    .authorizationRequestRepository(authorizationRequestRepository())
+                    .and()
                 .successHandler(applicationContext.getBean(OAuth2AuthenticationSuccessHandler::class.java))
                 .authorizedClientRepository(applicationContext.getBean(AuthenticatedPrincipalOAuth2AuthorizedClientRepository::class.java))
                 .and()
