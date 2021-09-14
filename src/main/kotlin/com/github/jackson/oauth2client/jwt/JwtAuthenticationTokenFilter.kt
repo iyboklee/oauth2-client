@@ -1,4 +1,4 @@
-package com.github.jackson.jwtexample.jwt
+package com.github.jackson.oauth2client.jwt
 
 import io.jsonwebtoken.Claims
 import org.slf4j.LoggerFactory

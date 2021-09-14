@@ -1,7 +1,7 @@
 package com.github.jackson.oauth2client.configures
 
-import com.github.jackson.jwtexample.jwt.Jwt
-import com.github.jackson.jwtexample.jwt.JwtAuthenticationTokenFilter
+import com.github.jackson.oauth2client.jwt.Jwt
+import com.github.jackson.oauth2client.jwt.JwtAuthenticationTokenFilter
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity

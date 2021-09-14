@@ -1,4 +1,4 @@
-package com.github.jackson.jwtexample.jwt
+package com.github.jackson.oauth2client.jwt
 
 import org.springframework.security.authentication.AbstractAuthenticationToken
 import org.springframework.security.core.GrantedAuthority
