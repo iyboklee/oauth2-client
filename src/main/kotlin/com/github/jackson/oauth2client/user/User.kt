@@ -1,6 +1,5 @@
 package com.github.jackson.oauth2client.user
 
-import org.springframework.security.crypto.password.PasswordEncoder
 import javax.persistence.*
 
 @Entity
@@ -8,21 +7,26 @@ import javax.persistence.*
 data class User(
     @Id
     @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long?,
 
     @Column(name = "username")
     var username: String,
 
-    @Column(name = "passwd")
-    var passwd: String,
+    @Column(name = "provider")
+    var provider: String,
+
+    @Column(name = "provider_id")
+    var providerId: String,
+
+    @Column(name = "profile_image")
+    var profileImage: String?,
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "group_id")
-    val group: Group
+    var group: Group
 ) {
-    fun checkPassword(passwordEncoder: PasswordEncoder, credentials: String) {
-        if (!passwordEncoder.matches(credentials, passwd)) {
-            throw IllegalArgumentException("Bad credentials")
-        }
+    override fun toString(): String {
+        return "User(id=$id, username='$username', provider='$provider', providerId='$providerId', profileImage=$profileImage)"
     }
 }

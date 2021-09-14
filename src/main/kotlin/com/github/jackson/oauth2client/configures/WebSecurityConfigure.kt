@@ -2,6 +2,8 @@ package com.github.jackson.oauth2client.configures
 
 import com.github.jackson.oauth2client.jwt.Jwt
 import com.github.jackson.oauth2client.jwt.JwtAuthenticationTokenFilter
+import com.github.jackson.oauth2client.oauth2.OAuth2AuthenticationSuccessHandler
+import com.github.jackson.oauth2client.user.UserService
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -26,6 +28,10 @@ class WebSecurityConfigure : WebSecurityConfigurerAdapter() {
     @Bean
     fun passwordEncoder(): PasswordEncoder = BCryptPasswordEncoder()
 
+    @Bean
+    fun oauth2AuthenticationSuccessHandler(jwt: Jwt, userService: UserService): OAuth2AuthenticationSuccessHandler =
+        OAuth2AuthenticationSuccessHandler(jwt, userService)
+
     override fun configure(http: HttpSecurity) {
         http
             .authorizeRequests()
@@ -46,6 +52,9 @@ class WebSecurityConfigure : WebSecurityConfigurerAdapter() {
                 .disable()
             .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+            .oauth2Login()
+                .successHandler(applicationContext.getBean(OAuth2AuthenticationSuccessHandler::class.java))
                 .and()
             http.addFilterAfter(
                 applicationContext.getBean(JwtAuthenticationTokenFilter::class.java),

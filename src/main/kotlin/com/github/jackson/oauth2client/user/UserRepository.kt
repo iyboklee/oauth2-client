@@ -17,4 +17,17 @@ interface UserRepository : JpaRepository<User, Long> {
     """)
     fun findByUsername(username: String): User?
 
+    @Query("""
+       select 
+            u 
+        from 
+            User u join fetch u.group g 
+            left join fetch g.permissions gp 
+            join fetch gp.permission 
+        where 
+            u.provider = :provider
+            and u.providerId = :providerId
+    """)
+    fun findByProviderAndProviderId(provider: String, providerId: String): User?
+
 }

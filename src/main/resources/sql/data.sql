@@ -15,8 +15,3 @@ VALUES (1, 1, 1),
        (2, 2, 1),
        (3, 2, 2)
 ;
-
-INSERT INTO users(id, username, passwd, group_id)
-VALUES (1, 'user', '$2a$10$B32L76wyCEGqG/UVKPYk9uqZHCWb7k4ci98VTQ7l.dCEib/kzpKGe', 1),
-       (2, 'admin', '$2a$10$/enTGRjB6noB9NCd8g5kGuLchiTsZsqcUyXkUn4yglUPZ4WZ9MvrK', 2)
-;
