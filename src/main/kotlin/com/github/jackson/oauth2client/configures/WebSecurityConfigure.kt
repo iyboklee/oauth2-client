@@ -57,35 +57,35 @@ class WebSecurityConfigure : WebSecurityConfigurerAdapter() {
   override fun configure(http: HttpSecurity) {
     http
       .authorizeRequests()
-      .antMatchers("/api/user/me").hasAnyRole("USER")
-      .anyRequest().permitAll()
-      .and()
+        .antMatchers("/api/user/me").hasAnyRole("USER")
+        .anyRequest().permitAll()
+        .and()
       .formLogin()
-      .disable()
+        .disable()
       .csrf()
-      .disable()
+        .disable()
       .headers()
-      .disable()
+        .disable()
       .httpBasic()
-      .disable()
+        .disable()
       .rememberMe()
-      .disable()
+        .disable()
       .logout()
-      .disable()
+        .disable()
       .sessionManagement()
-      .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-      .and()
+        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        .and()
       .oauth2Login()
-      .authorizationEndpoint()
-      .authorizationRequestRepository(authorizationRequestRepository())
-      .and()
-      .successHandler(applicationContext.getBean(OAuth2AuthenticationSuccessHandler::class.java))
-      .authorizedClientRepository(applicationContext.getBean(AuthenticatedPrincipalOAuth2AuthorizedClientRepository::class.java))
-      .and()
-    http.addFilterAfter(
-      applicationContext.getBean(JwtAuthenticationTokenFilter::class.java),
-      SecurityContextPersistenceFilter::class.java
-    )
+        .authorizationEndpoint()
+          .authorizationRequestRepository(authorizationRequestRepository())
+          .and()
+        .successHandler(applicationContext.getBean(OAuth2AuthenticationSuccessHandler::class.java))
+        .authorizedClientRepository(applicationContext.getBean(AuthenticatedPrincipalOAuth2AuthorizedClientRepository::class.java))
+        .and()
+      .addFilterAfter(
+        applicationContext.getBean(JwtAuthenticationTokenFilter::class.java),
+        SecurityContextPersistenceFilter::class.java
+      )
   }
 
 }
