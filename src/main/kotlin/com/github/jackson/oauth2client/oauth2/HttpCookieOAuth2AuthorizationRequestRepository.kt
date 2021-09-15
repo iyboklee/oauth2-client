@@ -61,7 +61,7 @@ class HttpCookieOAuth2AuthorizationRequestRepository(
   }
 
   companion object {
-    private val OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME = "oauth2_auth_request"
+    private const val OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME = "oauth2_auth_request"
   }
 
 }
