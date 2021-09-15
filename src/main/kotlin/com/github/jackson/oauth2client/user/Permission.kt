@@ -8,10 +8,10 @@ import javax.persistence.Table
 @Entity
 @Table(name = "permissions")
 data class Permission(
-    @Id
-    @Column(name = "id")
-    var id: Long?,
+  @Id
+  @Column(name = "id")
+  var id: Long?,
 
-    @Column(name = "name")
-    var name: String
+  @Column(name = "name")
+  var name: String
 )

@@ -8,12 +8,12 @@ import javax.sql.DataSource
 @Component
 class DataSourcePostProcessor : BeanPostProcessor {
 
-    override fun postProcessAfterInitialization(bean: Any, beanName: String): Any {
-        return if (bean is DataSource && bean !is Log4jdbcProxyDataSource) {
-            Log4jdbcProxyDataSource(bean as DataSource?)
-        } else {
-            bean
-        }
+  override fun postProcessAfterInitialization(bean: Any, beanName: String): Any {
+    return if (bean is DataSource && bean !is Log4jdbcProxyDataSource) {
+      Log4jdbcProxyDataSource(bean as DataSource?)
+    } else {
+      bean
     }
+  }
 
 }

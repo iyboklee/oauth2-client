@@ -5,13 +5,13 @@ import javax.persistence.*
 @Entity
 @Table(name = "groups")
 data class Group(
-    @Id
-    @Column(name = "id")
-    var id: Long?,
+  @Id
+  @Column(name = "id")
+  var id: Long?,
 
-    @Column(name = "name")
-    var name: String,
+  @Column(name = "name")
+  var name: String,
 
-    @OneToMany(mappedBy = "group")
-    val permissions: List<GroupPermission> = emptyList()
+  @OneToMany(mappedBy = "group")
+  val permissions: List<GroupPermission> = emptyList()
 )

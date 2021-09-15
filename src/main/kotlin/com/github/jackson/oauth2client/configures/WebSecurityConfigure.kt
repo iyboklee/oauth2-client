@@ -24,68 +24,68 @@ import org.springframework.security.web.context.SecurityContextPersistenceFilter
 @EnableWebSecurity
 class WebSecurityConfigure : WebSecurityConfigurerAdapter() {
 
-    @Bean
-    fun jwt(configure: JwtConfigure): Jwt = Jwt(configure.secretKey!!, configure.issuer, configure.expirySeconds)
+  @Bean
+  fun jwt(configure: JwtConfigure): Jwt = Jwt(configure.secretKey!!, configure.issuer, configure.expirySeconds)
 
-    @Bean
-    fun jwtAuthenticationTokenFilter(jwt: Jwt, configure: JwtConfigure): JwtAuthenticationTokenFilter =
-        JwtAuthenticationTokenFilter(jwt, configure.headerKey)
+  @Bean
+  fun jwtAuthenticationTokenFilter(jwt: Jwt, configure: JwtConfigure): JwtAuthenticationTokenFilter =
+    JwtAuthenticationTokenFilter(jwt, configure.headerKey)
 
-    @Bean
-    fun authorizationRequestRepository(): AuthorizationRequestRepository<OAuth2AuthorizationRequest> =
-        HttpCookieOAuth2AuthorizationRequestRepository()
+  @Bean
+  fun authorizationRequestRepository(): AuthorizationRequestRepository<OAuth2AuthorizationRequest> =
+    HttpCookieOAuth2AuthorizationRequestRepository()
 
-    @Bean
-    fun oauth2AuthenticationSuccessHandler(jwt: Jwt, userService: UserService): OAuth2AuthenticationSuccessHandler =
-        OAuth2AuthenticationSuccessHandler(jwt, userService)
+  @Bean
+  fun oauth2AuthenticationSuccessHandler(jwt: Jwt, userService: UserService): OAuth2AuthenticationSuccessHandler =
+    OAuth2AuthenticationSuccessHandler(jwt, userService)
 
-    @Bean
-    fun authorizedClientService(
-        jdbcOperations: JdbcOperations,
-        clientRegistrationRepository: ClientRegistrationRepository
-    ): OAuth2AuthorizedClientService =
-        JdbcOAuth2AuthorizedClientService(jdbcOperations, clientRegistrationRepository)
+  @Bean
+  fun authorizedClientService(
+    jdbcOperations: JdbcOperations,
+    clientRegistrationRepository: ClientRegistrationRepository
+  ): OAuth2AuthorizedClientService =
+    JdbcOAuth2AuthorizedClientService(jdbcOperations, clientRegistrationRepository)
 
-    @Bean
-    fun authorizedClientRepository(
-        authorizedClientService: OAuth2AuthorizedClientService
-    ): AuthenticatedPrincipalOAuth2AuthorizedClientRepository =
-        AuthenticatedPrincipalOAuth2AuthorizedClientRepository(
-            authorizedClientService
-        )
+  @Bean
+  fun authorizedClientRepository(
+    authorizedClientService: OAuth2AuthorizedClientService
+  ): AuthenticatedPrincipalOAuth2AuthorizedClientRepository =
+    AuthenticatedPrincipalOAuth2AuthorizedClientRepository(
+      authorizedClientService
+    )
 
-    override fun configure(http: HttpSecurity) {
-        http
-            .authorizeRequests()
-                .antMatchers("/api/user/me").hasAnyRole("USER")
-                .anyRequest().permitAll()
-            .and()
-            .formLogin()
-                .disable()
-            .csrf()
-                .disable()
-            .headers()
-                .disable()
-            .httpBasic()
-                .disable()
-            .rememberMe()
-                .disable()
-            .logout()
-                .disable()
-            .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-            .oauth2Login()
-                .authorizationEndpoint()
-                    .authorizationRequestRepository(authorizationRequestRepository())
-                    .and()
-                .successHandler(applicationContext.getBean(OAuth2AuthenticationSuccessHandler::class.java))
-                .authorizedClientRepository(applicationContext.getBean(AuthenticatedPrincipalOAuth2AuthorizedClientRepository::class.java))
-                .and()
-            http.addFilterAfter(
-                applicationContext.getBean(JwtAuthenticationTokenFilter::class.java),
-                SecurityContextPersistenceFilter::class.java
-            )
-    }
+  override fun configure(http: HttpSecurity) {
+    http
+      .authorizeRequests()
+      .antMatchers("/api/user/me").hasAnyRole("USER")
+      .anyRequest().permitAll()
+      .and()
+      .formLogin()
+      .disable()
+      .csrf()
+      .disable()
+      .headers()
+      .disable()
+      .httpBasic()
+      .disable()
+      .rememberMe()
+      .disable()
+      .logout()
+      .disable()
+      .sessionManagement()
+      .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+      .and()
+      .oauth2Login()
+      .authorizationEndpoint()
+      .authorizationRequestRepository(authorizationRequestRepository())
+      .and()
+      .successHandler(applicationContext.getBean(OAuth2AuthenticationSuccessHandler::class.java))
+      .authorizedClientRepository(applicationContext.getBean(AuthenticatedPrincipalOAuth2AuthorizedClientRepository::class.java))
+      .and()
+    http.addFilterAfter(
+      applicationContext.getBean(JwtAuthenticationTokenFilter::class.java),
+      SecurityContextPersistenceFilter::class.java
+    )
+  }
 
 }

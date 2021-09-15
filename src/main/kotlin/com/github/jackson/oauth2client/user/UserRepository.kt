@@ -5,7 +5,8 @@ import org.springframework.data.jpa.repository.Query
 
 interface UserRepository : JpaRepository<User, Long> {
 
-    @Query("""
+  @Query(
+    """
        select 
             u 
         from 
@@ -14,10 +15,12 @@ interface UserRepository : JpaRepository<User, Long> {
             join fetch gp.permission 
         where 
             u.username = :username
-    """)
-    fun findByUsername(username: String): User?
+    """
+  )
+  fun findByUsername(username: String): User?
 
-    @Query("""
+  @Query(
+    """
        select 
             u 
         from 
@@ -27,7 +30,8 @@ interface UserRepository : JpaRepository<User, Long> {
         where 
             u.provider = :provider
             and u.providerId = :providerId
-    """)
-    fun findByProviderAndProviderId(provider: String, providerId: String): User?
+    """
+  )
+  fun findByProviderAndProviderId(provider: String, providerId: String): User?
 
 }

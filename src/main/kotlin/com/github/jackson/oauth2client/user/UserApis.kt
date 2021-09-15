@@ -9,12 +9,12 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/api/user")
 class UserApis(
-    val userService: UserService
+  val userService: UserService
 ) {
-    @GetMapping("/me")
-    fun me(@AuthenticationPrincipal authentication: JwtAuthentication): UserDto {
-        val user: User = userService.findByUsername(authentication.username)
-            ?: throw IllegalArgumentException("Could not found user for ${authentication.username}")
-        return UserDto(user.username, user.group.name)
-    }
+  @GetMapping("/me")
+  fun me(@AuthenticationPrincipal authentication: JwtAuthentication): UserDto {
+    val user: User = userService.findByUsername(authentication.username)
+      ?: throw IllegalArgumentException("Could not found user for ${authentication.username}")
+    return UserDto(user.username, user.group.name)
+  }
 }
